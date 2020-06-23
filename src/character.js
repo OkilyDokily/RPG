@@ -7,3 +7,4 @@ export class Character {
     this.weapon = 3;
   }
 }
+
