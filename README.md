@@ -1,5 +1,5 @@
 
-# _RGG_
+# _RPG_
 
 #### _This demonstrates knowledge of JavaScript and Jest._
 
