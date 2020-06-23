@@ -34,8 +34,14 @@ describe('Battle', () => {
     expect(roll.character).toBeLessThanOrEqual(6);
     expect(roll.enemy).toBeGreaterThanOrEqual(0);
     expect(roll.enemy).toBeLessThanOrEqual(6);
+  });
+  test('character should gain enemies gold', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.extractGoldFromEnemy(character, enemy);
+    expect(character.gold).toEqual(5);
    
-    
   });
 });
 
