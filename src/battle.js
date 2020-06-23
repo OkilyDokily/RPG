@@ -8,12 +8,20 @@ export class Battle{
   extractGoldFromEnemy(character,enemy){
     character.gold += enemy.gold;
   }
-  subtractEnemyHealth(){
-
+  subtractEnemyHealth(character, enemy){
+    enemy.health = enemy.health - character.weapon;
   }
-  subtractCharacterHealth(){
-
+  subtractCharacterHealth(character,enemy){
+    character.health = character.health - enemy.weapon;
   }
   
-
+  whoWinsAttack(character,enemy){
+    let roll = this.rollDie();
+    if(roll.enemy >= roll.character){
+       return "enemy";
+    }
+    else{
+       return "character";
+    }
+  }
 } 

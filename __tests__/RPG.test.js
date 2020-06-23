@@ -41,7 +41,27 @@ describe('Battle', () => {
     const character = new Character();
     battle.extractGoldFromEnemy(character, enemy);
     expect(character.gold).toEqual(5);
-   
+  });
+  test('subtract enemy health', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.subtractEnemyHealth(character, enemy);
+    expect(enemy.health).toEqual(2);
+  });
+  test('subtract character health', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.subtractCharacterHealth(character, enemy);
+    expect(character.health).toEqual(17);
+  });
+  test('determine who wins attack', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    let winner = battle.whoWinsAttack(character, enemy);
+    expect(winner).toMatch(/(character)|(enemy)/);
   });
 });
 
