@@ -145,5 +145,20 @@ describe('Battle', () => {
     expect(battleResult).toMatch(/(game over)|(You won this battle.)/);
   });
 
+  test('add experience points after each attack', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("character",character,enemy);
+    battle.attack("character",character,enemy);
+    battle.attack("character",character,enemy);
+    
+    expect(character.XP).toEqual(7);
+  });
+
 });
 

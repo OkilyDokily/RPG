@@ -22,6 +22,7 @@ export class Battle{
     else{
       this.subtractCharacterHealth(character,enemy);
     }
+    character.addExperiencePoints()
   }
   
   whoWinsAttack(character,enemy){
