@@ -86,5 +86,64 @@ describe('Battle', () => {
     const enemyDied = battle.hasEnemyDied(enemy);
     expect(enemyDied).toEqual(true);
   });
+
+  test('determine if character has died', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    const characterDied = battle.hasCharacterDied(character);
+    expect(characterDied).toEqual(true);
+  });
+
+  test('extract gold from character if enemy has died', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("character",character,enemy);
+    battle.attack("character",character,enemy);
+    battle.extractGoldFromEnemyIfEnemyIsDead(character,enemy);
+    expect(character.gold).toEqual(5);
+  });
+
+  test('determine if battle has ended when character wins', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("character",character,enemy);
+    battle.attack("character",character,enemy);
+    const battleEnded = battle.determineIfBattleHasEnded(character,enemy);
+    expect(battleEnded).toEqual(true);
+  });
+
+  test('determine if battle has ended when enemy wins', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    battle.attack("enemy",character,enemy);
+    const battleEnded = battle.determineIfBattleHasEnded(character,enemy);
+    expect(battleEnded).toEqual(true);
+  });
+
+  test('determine results of a startbattle method', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    const battleResult = battle.startBattle(character, enemy);
+    expect(battleResult).toMatch(/(game over)|(You won this battle.)/);
+  });
+
 });
 
