@@ -9,6 +9,9 @@ export class Character {
 
   addExperiencePoints(){
     this.XP++;
+    if(this.XP >= this.level * 100){
+      this.level++;
+    }
   }
 }
 

@@ -12,6 +12,16 @@ describe('Character', () => {
     expect(character.XP).toEqual(0);
     expect(character.weapon).toEqual(3);
   });
+
+  test('automatically level up when experience points reach or exceed a multiple of 100', () => {
+   
+    const character = new Character();
+    for(let i = 1; i <= 200;i++){
+      character.addExperiencePoints()
+    }
+    
+    expect(character.level).toEqual(3);
+  });
 });
 
 
@@ -159,6 +169,8 @@ describe('Battle', () => {
     
     expect(character.XP).toEqual(7);
   });
+
+ 
 
 });
 
