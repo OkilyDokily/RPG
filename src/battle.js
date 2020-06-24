@@ -34,5 +34,12 @@ export class Battle{
     }
   }
 
+  hasEnemyDied(enemy){
+    if (enemy.health <= 0){
+      return true;
+    }
+    return false;
+  }
+
 
 } 

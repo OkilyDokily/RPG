@@ -74,8 +74,17 @@ describe('Battle', () => {
     }
     else{
       expect(character.health).toEqual(17);
-    }
-    
+    }  
+  });
+
+  test('determine if enemy has died', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    battle.attack("character",character,enemy);
+    battle.attack("character",character,enemy);
+    const enemyDied = battle.hasEnemyDied(enemy);
+    expect(enemyDied).toEqual(true);
   });
 });
 
