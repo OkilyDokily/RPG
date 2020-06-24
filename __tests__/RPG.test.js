@@ -63,5 +63,19 @@ describe('Battle', () => {
     let winner = battle.whoWinsAttack(character, enemy);
     expect(winner).toMatch(/(character)|(enemy)/);
   });
+  test('attack with winner of attack', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    let winner = battle.whoWinsAttack(character, enemy);
+    battle.attack(winner,character,enemy)
+    if(winner === "character"){
+      expect(enemy.health).toEqual(2);
+    }
+    else{
+      expect(character.health).toEqual(17);
+    }
+    
+  });
 });
 

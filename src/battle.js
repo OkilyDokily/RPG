@@ -14,6 +14,15 @@ export class Battle{
   subtractCharacterHealth(character,enemy){
     character.health = character.health - enemy.weapon;
   }
+
+  attack(attacker,character,enemy){
+    if(attacker === "character"){
+      this.subtractEnemyHealth(character,enemy);
+    }
+    else{
+      this.subtractCharacterHealth(character,enemy);
+    }
+  }
   
   whoWinsAttack(character,enemy){
     let roll = this.rollDie();
@@ -24,4 +33,6 @@ export class Battle{
        return "character";
     }
   }
+
+
 } 
