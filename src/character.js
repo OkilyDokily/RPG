@@ -5,6 +5,8 @@ export class Character {
     this.XP = 0;
     this.level = 1;
     this.weapon = 3;
+    this.defense = 0;
+    this.items =[];
   }
 
   addExperiencePoints(){

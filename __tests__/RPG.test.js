@@ -1,6 +1,30 @@
 import {Character} from '../src/character.js'
 import {Enemy} from '../src/enemy.js'
 import {Battle} from '../src/battle.js'
+import {Store} from '../src/store.js'
+
+
+
+describe('Store', () => {
+  test('should correctly create a store object', () => {
+    const store = new Store();
+   
+    expect(store.sword).toEqual({cost:5, weapon:2});
+    expect(store.shield).toEqual({cost: 5, defense:2});
+    expect(store.heart).toEqual({cost: 5, health: 1});
+    expect(store.items).toEqual(["sword","shield","heart"]); 
+  });
+
+  test('character should be able to buy item from store', () => {
+    const store = new Store();
+    const character = new Character();
+    character.gold = 5;
+
+    store.buyItem(character,"sword");
+    const characterHasItem = character.items.includes("sword")
+    expect(characterHasItem).toEqual(true);
+  });
+});
 
 describe('Character', () => {
   test('should correctly create a character object', () => {
