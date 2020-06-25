@@ -107,6 +107,16 @@ describe('Battle', () => {
     battle.subtractCharacterHealth(character, enemy);
     expect(character.health).toEqual(17);
   });
+
+  test('apply defense to health when attacked', () => {
+    const battle = new Battle();
+    const enemy = new Enemy();
+    const character = new Character();
+    character.defense = 1;
+    battle.subtractCharacterHealth(character, enemy);
+    expect(character.health).toEqual(18);
+  });
+
   test('determine who wins attack', () => {
     const battle = new Battle();
     const enemy = new Enemy();

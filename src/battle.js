@@ -12,7 +12,11 @@ export class Battle{
     enemy.health = enemy.health - character.weapon;
   }
   subtractCharacterHealth(character,enemy){
-    character.health = character.health - enemy.weapon;
+    let enemyAttack = enemy.weapon - character.defense;
+    if (enemyAttack < 0){
+      enemyAttack = 0;
+    }
+    character.health = character.health - enemyAttack;
   }
 
   attack(attacker,character,enemy){
