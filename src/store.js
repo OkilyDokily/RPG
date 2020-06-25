@@ -7,14 +7,20 @@ export class Store{
   }
 
   buyItem(character,item){
-    if(character.gold >= this[item].cost){
-      character.gold = character.gold - this[item].cost;
-      if(!(item === "heart")){
-        character.items.push(item);
-      }
-      else{
-      //automatically apply hearts rather than equip them
-      character.health++;
+    if(this.items.includes(item)){
+      if(character.gold >= this[item].cost){
+        character.gold = character.gold - this[item].cost;
+        if(!(item === "heart")){
+          character.items.push(item);
+          var index = this.items.indexOf(item);
+          this.items.splice(index, 1);
+          
+      
+        }
+        else{
+        //automatically apply hearts rather than equip them
+        character.health++;
+        }
       }
     }
   }

@@ -25,6 +25,18 @@ describe('Store', () => {
     expect(characterHasItem).toEqual(true);
   });
 
+  test('can not buy item that is already owned', () => {
+    const store = new Store();
+    const character = new Character();
+    character.gold = 10;
+
+    store.buyItem(character,"sword");
+    store.buyItem(character,"sword");
+    let length = character.items.filter(item => item == "sword").length
+    expect(store.items.length).toEqual(2);
+    expect(length).toEqual(1);
+  });  
+
   test('automatically apply hearts rather than equip them', () => {
     const store = new Store();
     const character = new Character();
