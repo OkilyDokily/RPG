@@ -24,6 +24,15 @@ describe('Store', () => {
     const characterHasItem = character.items.includes("sword")
     expect(characterHasItem).toEqual(true);
   });
+
+  test('automatically apply hearts rather than equip them', () => {
+    const store = new Store();
+    const character = new Character();
+    character.gold = 5;
+
+    store.buyItem(character,"heart");
+    expect(character.health).toEqual(21);
+  });  
 });
 
 describe('Character', () => {

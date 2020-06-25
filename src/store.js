@@ -9,7 +9,13 @@ export class Store{
   buyItem(character,item){
     if(character.gold >= this[item].cost){
       character.gold = character.gold - this[item].cost;
-      character.items.push(item);
+      if(!(item === "heart")){
+        character.items.push(item);
+      }
+      else{
+      //automatically apply hearts rather than equip them
+      character.health++;
+      }
     }
   }
  
