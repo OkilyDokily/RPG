@@ -8,7 +8,6 @@ import {Store} from '../src/store.js'
 describe('Store', () => {
   test('should correctly create a store object', () => {
     const store = new Store();
-   
     expect(store.sword).toEqual({cost:5, weapon:2});
     expect(store.shield).toEqual({cost: 5, defense:2});
     expect(store.heart).toEqual({cost: 5, health: 1});
@@ -19,7 +18,6 @@ describe('Store', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 5;
-
     store.buyItem(character,"sword");
     const characterHasItem = character.items.includes("sword")
     expect(characterHasItem).toEqual(true);
@@ -41,7 +39,6 @@ describe('Store', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 5;
-
     store.buyItem(character,"heart");
     expect(character.health).toEqual(21);
   });  
@@ -50,7 +47,6 @@ describe('Store', () => {
 describe('Character', () => {
   test('should correctly create a character object', () => {
     const character = new Character();
-   
     expect(character.health).toEqual(20);
     expect(character.gold).toEqual(0);
     expect(character.level).toEqual(1);
@@ -77,12 +73,19 @@ describe('Character', () => {
   });
 
   test('let character equip defense item', () => {
-   
     const character = new Character();
     character.items.push("shield");
     character.equipItem("shield");
-
     expect(character.defense).toEqual(2)
+  });
+
+  test('prevent character from equipping an already equipped item', () => {
+    const character = new Character();
+    character.items.push("shield");
+    character.equipItem("shield");
+    character.equipItem("shield");
+    expect(character.equipped.length).toEqual(1);
+    expect(character.defense).toEqual(2);
   });
 });
 
@@ -93,8 +96,7 @@ describe('Enemy', () => {
    
     expect(enemy.health).toEqual(5);
     expect(enemy.gold).toEqual(5);
-    expect(enemy.weapon).toEqual(3);
-    
+    expect(enemy.weapon).toEqual(3);  
   });
 });
 

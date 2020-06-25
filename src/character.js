@@ -22,10 +22,13 @@ export class Character {
   equipItem(item){
     if(this.items.includes(item)){
       this.equipped.push(item);
+      var index = this.items.indexOf(item);
+      this.items.splice(index, 1);
+
+      let store = new Store();
+      let keys = Object.keys(store[item]);
+      this[keys[1]] = this[keys[1]] + store[item][keys[1]];
     }
-    let store = new Store();
-    let keys = Object.keys(store[item]);
-    this[keys[1]] = this[keys[1]] + store[item][keys[1]];
   }
 
   levelUp(){
