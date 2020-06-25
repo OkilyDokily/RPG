@@ -38,21 +38,20 @@ describe('Character', () => {
   });
 
   test('automatically level up when experience points reach or exceed a multiple of 100', () => {
-   
     const character = new Character();
     for(let i = 1; i <= 200;i++){
       character.addExperiencePoints()
     }
-    
     expect(character.level).toEqual(3);
+    expect(character.weapon).toEqual(5);
+    expect(character.health).toEqual(30);
+    expect(character.defense).toEqual(2)
   });
 
   test('let character equip attack item', () => {
-   
     const character = new Character();
     character.items.push("sword");
     character.equipItem("sword");
-
     expect(character.weapon).toEqual(5)
   });
 

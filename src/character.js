@@ -15,7 +15,7 @@ export class Character {
   addExperiencePoints(){
     this.XP++;
     if(this.XP >= this.level * 100){
-      this.level++;
+      this.levelUp();
     }
   }
 
@@ -26,6 +26,13 @@ export class Character {
     let store = new Store();
     let keys = Object.keys(store[item]);
     this[keys[1]] = this[keys[1]] + store[item][keys[1]];
+  }
+
+  levelUp(){
+    this.level++;
+    this.weapon++;
+    this.defense++;
+    this.health = 20 + ((this.level - 1) * 5)
   }
 }
 
