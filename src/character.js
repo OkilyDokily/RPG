@@ -2,6 +2,10 @@ import { Store } from "./store";
 
 export class Character {
   constructor(){
+    //used to determine item is already equipped.
+    this.weaponItems = ["sword","mace"];
+    this.shieldItems = ["shield"];
+    
     this.health = 20;
     this.gold = 0;
     this.XP = 0;
@@ -20,6 +24,11 @@ export class Character {
   }
 
   equipItem(item){
+    if(this.weaponItems.includes(item) && this.equipped.some(item => this.weaponItems.includes(item)) ){
+      return;
+    }
+
+
     if(this.items.includes(item)){
       this.equipped.push(item);
       var index = this.items.indexOf(item);

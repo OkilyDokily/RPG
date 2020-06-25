@@ -11,7 +11,7 @@ describe('Store', () => {
     expect(store.sword).toEqual({cost:5, weapon:2});
     expect(store.shield).toEqual({cost: 5, defense:2});
     expect(store.heart).toEqual({cost: 5, health: 1});
-    expect(store.items).toEqual(["sword","shield","heart"]); 
+    expect(store.items).toEqual(["sword","shield","mace","heart"]); 
   });
 
   test('store should let character buy item', () => {
@@ -31,7 +31,7 @@ describe('Store', () => {
     store.buyItem(character,"sword");
     store.buyItem(character,"sword");
     let length = character.items.filter(item => item == "sword").length
-    expect(store.items.length).toEqual(2);
+    expect(store.items.length).toEqual(3);
     expect(length).toEqual(1);
   });  
 
@@ -86,6 +86,16 @@ describe('Character', () => {
     character.equipItem("shield");
     expect(character.equipped.length).toEqual(1);
     expect(character.defense).toEqual(2);
+  });
+
+  test('prevent character from equipping more than one attack item', () => {
+    const character = new Character();
+    character.items.push("sword");
+    character.items.push("mace");
+    character.equipItem("sword");
+    character.equipItem("mace");
+    expect(character.equipped.length).toEqual(1);
+    expect(character.equipped[0]).toEqual("sword");
   });
 
   test('let character unequip an item', () => {
