@@ -55,6 +55,15 @@ describe('Character', () => {
 
     expect(character.weapon).toEqual(5)
   });
+
+  test('let character equip defense item', () => {
+   
+    const character = new Character();
+    character.items.push("shield");
+    character.equipItem("shield");
+
+    expect(character.defense).toEqual(2)
+  });
 });
 
 
