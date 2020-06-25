@@ -15,7 +15,7 @@ describe('Store', () => {
     expect(store.items).toEqual(["sword","shield","heart"]); 
   });
 
-  test('character should be able to buy item from store', () => {
+  test('store should let character buy item', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 5;
@@ -45,6 +45,15 @@ describe('Character', () => {
     }
     
     expect(character.level).toEqual(3);
+  });
+
+  test('let character equip attack item', () => {
+   
+    const character = new Character();
+    character.items.push("sword");
+    character.equipItem("sword");
+
+    expect(character.weapon).toEqual(5)
   });
 });
 

@@ -1,3 +1,5 @@
+import { Store } from "./store";
+
 export class Character {
   constructor(){
     this.health = 20;
@@ -6,7 +8,8 @@ export class Character {
     this.level = 1;
     this.weapon = 3;
     this.defense = 0;
-    this.items =[];
+    this.items = [];
+    this.equipped = [];
   }
 
   addExperiencePoints(){
@@ -14,6 +17,15 @@ export class Character {
     if(this.XP >= this.level * 100){
       this.level++;
     }
+  }
+
+  equipItem(item){
+    if(this.items.includes(item)){
+      this.equipped.push(item);
+    }
+    let store = new Store();
+    let keys = Object.keys(store[item]);
+    this[keys[1]] = this[keys[1]] + store[item][keys[1]];
   }
 }
 
