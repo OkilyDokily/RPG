@@ -87,6 +87,17 @@ describe('Character', () => {
     expect(character.equipped.length).toEqual(1);
     expect(character.defense).toEqual(2);
   });
+
+  test('let character unequip an item', () => {
+    const character = new Character();
+    character.items.push("shield");
+    character.equipItem("shield");
+    character.unequip("shield")
+    expect(character.defense).toEqual(0);
+    expect(character.equipped.length).toEqual(0);
+    expect(character.items.length).toEqual(1);
+  });
+
 });
 
 

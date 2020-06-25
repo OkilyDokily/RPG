@@ -31,6 +31,18 @@ export class Character {
     }
   }
 
+  unequip(item){
+    if(this.equipped.includes(item)){
+      this.items.push(item);
+      var index = this.equipped.indexOf(item);
+      this.equipped.splice(index, 1);
+
+      let store = new Store();
+      let keys = Object.keys(store[item]);
+      this[keys[1]] = this[keys[1]] - store[item][keys[1]];
+    }
+  }
+
   levelUp(){
     this.level++;
     this.weapon++;
