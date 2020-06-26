@@ -11,7 +11,7 @@ describe('Store', () => {
     expect(store.sword).toEqual({cost:5, weapon:2});
     expect(store.shield).toEqual({cost: 5, defense:2});
     expect(store.heart).toEqual({cost: 5, health: 1});
-    expect(store.items).toEqual(["sword","shield","mace","heart"]); 
+    expect(store.items).toEqual(["sword","shield","mace","heart","steelshield", "boxinggloves"]); 
   });
 
   test('store should let character buy item', () => {
@@ -31,8 +31,23 @@ describe('Store', () => {
     store.buyItem(character,"sword");
     store.buyItem(character,"sword");
     let length = character.items.filter(item => item == "sword").length
-    expect(store.items.length).toEqual(3);
+    expect(store.items.length).toEqual(5);
     expect(length).toEqual(1);
+  });  
+
+  test('can not buy more than 4 items', () => {
+    const store = new Store();
+    const character = new Character();
+    character.gold = 50;
+
+    store.buyItem(character,"sword");
+    store.buyItem(character,"shield");
+    store.buyItem(character,"mace");
+    store.buyItem(character,"steelshield");
+    store.buyItem(character,"boxinggloves");
+    
+    expect(character.items.length).toEqual(4);
+   
   });  
 
   test('automatically apply hearts rather than equip them', () => {
@@ -108,6 +123,16 @@ describe('Character', () => {
     expect(character.items.length).toEqual(1);
   });
 
+  test('let character sell item back to store', () => {
+    const character = new Character();
+    const store = character.store;
+    character.items.push("shield");
+    character.equipItem("shield");
+    character.unequip("shield");
+
+    character.sellItem("shield");
+    expect(character.gold).toEqual(5);
+  });
 });
 
 
