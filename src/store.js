@@ -1,3 +1,31 @@
+import {storeState,replaceState} from "./character.js"
+
+const obj = { "items": ["sword", "shield", "mace", "heart", "steelshield", "boxinggloves"], "sword": { cost: 5, weapon: 2 }, "boxinggloves": { cost: 3, weapon: 1 }, "mace": { cost: 10, weapon: 3 }, "shield": { cost: 5, defense: 2 }, "steelshield": { cost: 10, defense: 3 }, "heart": { cost: 5, health: 1 }};
+
+const store = storeState(obj);
+
+
+function buyItem(store, character, item) {
+  let storeObj = store();
+  let characterObj = character();
+  if (storeObj.items.includes(item) && ((characterObj.items.length + characterObj.equipped.length) < 4)) {
+    if (characterObj.gold >= storeObj[item].cost) {
+      characterObj.gold = characterObj.gold - storeObj[item].cost;
+      if (!(item === "heart")) {
+        characterObj.items.push(item);
+        var index = storeObj.items.indexOf(item);
+        storeObj.items.splice(index, 1);
+      }
+      else {
+        //automatically apply hearts rather than equip them
+        characterObj.health++;
+      }
+    }
+  }
+  store(replaceState({...storeObj}));
+  character(replaceState({...characterObj}));
+}
+
 export class Store{
   constructor(){
     this.items= ["sword","shield","mace","heart","steelshield", "boxinggloves"];
