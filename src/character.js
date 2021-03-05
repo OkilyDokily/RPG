@@ -1,51 +1,23 @@
-import { Store } from "./store";
+import {Store} from "./store";
 
-export const clonedeep = require('lodash.clonedeep');
-
-
-let characterObj = { "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": []};
-
+import store from "./store";
+import functional from "./functional.js"
+const clonedeep = require('lodash.clonedeep');
 
 
+let characterObj = {"store":store, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
 
-function addFunction(func) {
-  return function (state){
-    let obj = clonedeep(state);
-    obj[func.name] = func;
-    return clonedeep(obj);
-    }
-  ;
-}
-
-function storeState(obj = {}) {
-  let state = clonedeep(obj);
-  return function (modifyState) {
-    let newState = clonedeep(state);
-    state = modifyState(newState);
-    return newState
-  }
-}
-
+let {addFunction, storeState, changeState, replaceState} = functional();
 let character = storeState(characterObj);
-character(addFunction())
-character(addFunction())
-character(addFunction())
-character(addFunction())
+addCharacterFunctions(character);
 
-
-function changeState(prop, func) {
-  return function (state) {
-    let obj = clonedeep(state);
-    state[prop] = func(state[prop] || 0);
-    return clonedeep(obj);
-  }
-}
-
-
-export function replaceState(state) {
-  return function (newState) {
-    return clonedeep(state);
-  }
+function addCharacterFunctions(character) {
+  character(addFunction(addExperiencePoints.bind(null, character)));
+  character(addFunction(healthLevelUp.bind(null, character)));
+  character(addFunction(levelUp.bind(null, character)));
+  character(addFunction(sellItem.bind(null, character)));
+  character(addFunction(unequip.bind(null, character)));
+  character(addFunction(equipItem.bind(null, character)));
 }
 
 
@@ -55,17 +27,17 @@ const addExperiencePointsFunc = changeState("XP", addOnePoint);
 
 
 export function addExperiencePoints(character) {
-  let result = character(addExperiencePoints);
+  let result = character(addExperiencePointsFunc);
   if (result.XP >= (result.level * 100)) {
-    levelUp(character);
+    this.levelUp();
   }
 }
 
 function addOnePointFunctionToArray(arr) {
   return arr.map(x => {
     return changeState(x, addOnePoint);
-  })
-}
+  });
+};
 
 function runFuncArray(arr, character) {
   arr.forEach(x => {
@@ -75,7 +47,7 @@ function runFuncArray(arr, character) {
 
 function healthLevelUp(character) {
   let healthLevel = 10 + ((character().level - 1) * 5);
-  let changeHealth = changeState("health", (x) => healthLevel);
+  let changeHealth = changeState("health", () => healthLevel);
   character(changeHealth);
 }
 
@@ -83,7 +55,7 @@ function healthLevelUp(character) {
 function levelUp(character) {
   let funcArray = addOnePointFunctionToArray(["level", "weapon", "defense"]);
   runFuncArray(funcArray, character);
-  healthLevelUp(character);
+  this.healthLevelUp();
 }
 
 function sellItem(character, item) {
@@ -188,7 +160,7 @@ export class Character {
     this.level++;
     this.weapon++;
     this.defense++;
-    this.health = 20 + ((this.level - 1) * 5)
+    this.health = 20 + ((this.level - 1) * 5);
   }
 
   sellItem(item) {
@@ -198,4 +170,4 @@ export class Character {
     this.store.items.push(item);
   }
 }
-
+export default character;

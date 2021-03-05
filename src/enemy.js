@@ -1,7 +1,9 @@
-import {storeState} from "./character.js"
+import functional from "./functional.js"
 
 
-export const enemy = storeState({ "gold": 5, "weapon": 3, "health": 5 });
+
+const storeState = functional().storeState;
+const enemy = storeState({ "gold": 5, "weapon": 3, "health": 5 });
 
 export class Enemy{
   constructor(){
@@ -10,3 +12,5 @@ export class Enemy{
     this.health = 5;
   }
 }
+
+export default enemy;

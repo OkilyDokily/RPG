@@ -1,85 +1,183 @@
-import {replaceState,addExperiencePoints,clonedeep} from "./character.js"
 
-export class Battle{
-  constructor(){
+import character from "./character.js";
+import enemy from "./enemy.js";
+import functional from "./functional.js";
+export const clonedeep = require('lodash.clonedeep');
+
+let { addFunction, storeState, replaceState } = functional();
+const battle = storeState();
+addBattleFunction(character,enemy);
+
+function addBattleFunction(character, enemy) {
+  battle(addFunction(rollDie));
+  battle(addFunction(extractGoldFromEnemy.bind(null, character, enemy)));
+  battle(addFunction(subtractEnemyHealth.bind(null, character, enemy)));
+  battle(addFunction(subtractCharacterHealth.bind(null, character, enemy)));
+  battle(addFunction(attack.bind(null,character)));
+  battle(addFunction(whoWinsAttack));
+  battle(addFunction(hasCharacterDied.bind(null,character)));
+  battle(addFunction(hasEnemyDied.bind(null, enemy)));
+  battle(addFunction(extractGoldFromEnemyIfEnemyIsDead));
+  battle(addFunction(determineIfBattleHasEnded));
+  battle(addFunction(startBattle));
+}
+
+
+
+function rollDie() {
+  return ({ character: Math.floor(6 * Math.random()), enemy: Math.floor(6 * Math.random()) });
+}
+function extractGoldFromEnemy(character, enemy) {
+  let characterObj = clonedeep(character());
+  characterObj.gold += enemy().gold;
+  character(replaceState(clonedeep(characterObj)));
+}
+function subtractEnemyHealth(character, enemy) {
+  let enemyObj = clonedeep(enemy());
+  enemyObj.health = enemyObj.health - character().weapon;
+  enemy(replaceState(clonedeep(enemyObj)));
+}
+function subtractCharacterHealth(character, enemy) {
+  let characterObj = clonedeep(character());
+  let enemyAttack = enemy().weapon - characterObj.defense;
+  if (enemyAttack < 0) {
+    enemyAttack = 0;
+  }
+  characterObj.health = characterObj.health - enemyAttack;
+  character(replaceState(clonedeep(characterObj)));
+}
+
+function attack(character, winner) {
+  if (winner === "character") {
+    this.subtractEnemyHealth();
+  }
+  else {
+    this.subtractCharacterHealth();
+  }
+  character.addExperiencePoints();
+}
+
+function whoWinsAttack() {
+  let roll = this.rollDie();
+  if (roll.enemy >= roll.character) {
+    return "enemy";
+  }
+  else {
+    return "character";
+  }
+}
+
+function hasCharacterDied(character) {
+  if (character.health <= 0) {
+    return true;
+  }
+  return false;
+}
+
+function hasEnemyDied(enemy) {
+  if (enemy().health <= 0) {
+    return true;
+  }
+  return false;
+}
+
+function extractGoldFromEnemyIfEnemyIsDead() {
+  if (this.hasEnemyDied()) {
+    this.extractGoldFromEnemy();
+  }
+}
+
+function determineIfBattleHasEnded() {
+  return this.hasEnemyDied() || this.hasCharacterDied();
+}
+
+function startBattle() {
+  while (!this.determineIfBattleHasEnded()) {
+    let winner = this.whoWinsAttack();
+    this.attack(winner);
+  }
+  if (this.hasCharacterDied()) {
+    return "game over";
+  }
+  this.extractGoldFromEnemyIfEnemyIsDead();
+  return "You won this battle.";
+}
+
+
+export class Battle {
+  constructor() {
 
   }
-  rollDie(){
-    return {character: Math.floor (6 * Math.random()),enemy: Math.floor (6 * Math.random())}
+  rollDie() {
+    return { character: Math.floor(6 * Math.random()), enemy: Math.floor(6 * Math.random()) }
   }
-  extractGoldFromEnemy(character,enemy){
-    let characterObj = clonedeep(character());
-    characterObj.gold += enemy().gold;
-    character(replaceState(clonedeep(characterObj)))
+  extractGoldFromEnemy(character, enemy) {
+    character.gold += enemy.gold;
   }
-  subtractEnemyHealth(character, enemy){
-    let enemyObj = clonedeep(enemy());
+  subtractEnemyHealth(character, enemy) {
     enemy.health = enemy.health - character.weapon;
-    enemy(replaceState(clonedeep(enemyObj)))
   }
-  subtractCharacterHealth(character,enemy){
-    let characterObj = clonedeep(character());
-    let enemyAttack = enemy().weapon - character().defense;
-    if (enemyAttack < 0){
+  subtractCharacterHealth(character, enemy) {
+    let enemyAttack = enemy.weapon - character.defense;
+    if (enemyAttack < 0) {
       enemyAttack = 0;
     }
-    characterObj.health = characterObj.health - enemyAttack;
-    character(replaceState(clonedeep(characterObj)));
+    character.health = character.health - enemyAttack;
   }
 
-  attack(attacker,character,enemy){
-    if(attacker === "character"){
-      this.subtractEnemyHealth(character,enemy);
+  attack(attacker, character, enemy) {
+    if (attacker === "character") {
+      this.subtractEnemyHealth(character, enemy);
     }
-    else{
-      this.subtractCharacterHealth(character,enemy);
+    else {
+      this.subtractCharacterHealth(character, enemy);
     }
-    addExperiencePoints(character);
+    character.addExperiencePoints()
   }
-  
-  whoWinsAttack(){
+
+  whoWinsAttack() {
     let roll = this.rollDie();
-    if(roll.enemy >= roll.character){
-       return "enemy";
+    if (roll.enemy >= roll.character) {
+      return "enemy";
     }
-    else{
-       return "character";
+    else {
+      return "character";
     }
   }
 
-  hasCharacterDied(character){
-    if (character().health <= 0){
+  hasCharacterDied(character) {
+    if (character.health <= 0) {
       return true;
     }
     return false;
   }
 
-  hasEnemyDied(enemy){
-    if (enemy().health <= 0){
+  hasEnemyDied(enemy) {
+    if (enemy.health <= 0) {
       return true;
     }
     return false;
   }
 
-  extractGoldFromEnemyIfEnemyIsDead(character,enemy){
-    if(this.hasEnemyDied(enemy)){
-      this.extractGoldFromEnemy(character,enemy);
+  extractGoldFromEnemyIfEnemyIsDead(character, enemy) {
+    if (this.hasEnemyDied(enemy)) {
+      this.extractGoldFromEnemy(character, enemy);
     }
   }
 
-  determineIfBattleHasEnded(character,enemy){
+  determineIfBattleHasEnded(character, enemy) {
     return this.hasEnemyDied(enemy) || this.hasCharacterDied(character)
   }
 
-  startBattle(character,enemy){
-    while(!this.determineIfBattleHasEnded(character,enemy)){
-      let winner = this.whoWinsAttack(character,enemy);
-      this.attack(winner,character,enemy);
+  startBattle(character, enemy) {
+    while (!this.determineIfBattleHasEnded(character, enemy)) {
+      let winner = this.whoWinsAttack(character, enemy);
+      this.attack(winner, character, enemy);
     }
-    if(this.hasCharacterDied(character)){
-      return "game over";
+    if (this.hasCharacterDied(character)) {
+      return "game over"
     }
-    this.extractGoldFromEnemyIfEnemyIsDead(character,enemy);
+    this.extractGoldFromEnemyIfEnemyIsDead(character, enemy);
     return "You won this battle."
   }
-} 
+}
