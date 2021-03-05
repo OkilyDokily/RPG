@@ -1,3 +1,5 @@
+import {replaceState,addExperiencePoints,clonedeep} from "./character.js"
+
 export class Battle{
   constructor(){
 
@@ -6,17 +8,23 @@ export class Battle{
     return {character: Math.floor (6 * Math.random()),enemy: Math.floor (6 * Math.random())}
   }
   extractGoldFromEnemy(character,enemy){
-    character.gold += enemy.gold;
+    let characterObj = clonedeep(character());
+    characterObj.gold += enemy().gold;
+    character(replaceState(clonedeep(characterObj)))
   }
   subtractEnemyHealth(character, enemy){
+    let enemyObj = clonedeep(enemy());
     enemy.health = enemy.health - character.weapon;
+    enemy(replaceState(clonedeep(enemyObj)))
   }
   subtractCharacterHealth(character,enemy){
-    let enemyAttack = enemy.weapon - character.defense;
+    let characterObj = clonedeep(character());
+    let enemyAttack = enemy().weapon - character().defense;
     if (enemyAttack < 0){
       enemyAttack = 0;
     }
-    character.health = character.health - enemyAttack;
+    characterObj.health = characterObj.health - enemyAttack;
+    character(replaceState(clonedeep(characterObj)));
   }
 
   attack(attacker,character,enemy){
@@ -26,10 +34,10 @@ export class Battle{
     else{
       this.subtractCharacterHealth(character,enemy);
     }
-    character.addExperiencePoints()
+    addExperiencePoints(character);
   }
   
-  whoWinsAttack(character,enemy){
+  whoWinsAttack(){
     let roll = this.rollDie();
     if(roll.enemy >= roll.character){
        return "enemy";
@@ -40,14 +48,14 @@ export class Battle{
   }
 
   hasCharacterDied(character){
-    if (character.health <= 0){
+    if (character().health <= 0){
       return true;
     }
     return false;
   }
 
   hasEnemyDied(enemy){
-    if (enemy.health <= 0){
+    if (enemy().health <= 0){
       return true;
     }
     return false;
@@ -69,7 +77,7 @@ export class Battle{
       this.attack(winner,character,enemy);
     }
     if(this.hasCharacterDied(character)){
-      return "game over"
+      return "game over";
     }
     this.extractGoldFromEnemyIfEnemyIsDead(character,enemy);
     return "You won this battle."

@@ -1,100 +1,102 @@
 import { Store } from "./store";
 
-let characterObj = {"weaponIems":["sword","mace"],"shieldItems":["shield","steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] }
+export const clonedeep = require('lodash.clonedeep');
 
+
+let characterObj = { "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": []};
+
+
+
+
+function addFunction(func) {
+  return function (state){
+    let obj = clonedeep(state);
+    obj[func.name] = func;
+    return clonedeep(obj);
+    }
+  ;
+}
 
 function storeState(obj = {}) {
-  let state = obj;
+  let state = clonedeep(obj);
   return function (modifyState) {
-    let newState = { ...state };
+    let newState = clonedeep(state);
     state = modifyState(newState);
     return newState
   }
 }
 
 let character = storeState(characterObj);
+character(addFunction())
+character(addFunction())
+character(addFunction())
+character(addFunction())
 
-function changeState(prop, func)
-{
+
+function changeState(prop, func) {
   return function (state) {
-    let obj = { ...state }
+    let obj = clonedeep(state);
     state[prop] = func(state[prop] || 0);
-    return obj;
+    return clonedeep(obj);
   }
 }
 
-function changeState2(func, prop) {
-  return function (state) {
-    let obj = { ...state }
-    state[prop] = func(state[prop] || 0);
-    return obj;
-  }
-}
 
-export function replaceState(state)
-{
-  return function (newState)
-  {
-    return state;
+export function replaceState(state) {
+  return function (newState) {
+    return clonedeep(state);
   }
 }
 
 
 const addOnePoint = (x) => x + 1;
 
-const addExperiencePointsFunc = changeState("XP",addOnePoint);
+const addExperiencePointsFunc = changeState("XP", addOnePoint);
 
 
-function addExperiencePoints(character)
-{
+export function addExperiencePoints(character) {
   let result = character(addExperiencePoints);
-  if(result.XP >= (result.level * 100))
-  {
+  if (result.XP >= (result.level * 100)) {
     levelUp(character);
   }
 }
 
-function addOnePointFunctionToArray(arr)
-{
- return arr.map(x =>
-    {
-      return changeState(x,addOnePoint);
-    })
+function addOnePointFunctionToArray(arr) {
+  return arr.map(x => {
+    return changeState(x, addOnePoint);
+  })
 }
 
-function runFuncArray(arr,character)
-{
+function runFuncArray(arr, character) {
   arr.forEach(x => {
-    character(x);    
+    character(x);
   });
 }
 
-function healthLevelUp(character)
-{
+function healthLevelUp(character) {
   let healthLevel = 10 + ((character().level - 1) * 5);
-  let changeHealth = changeState("health",(x) => x = healthLevel);
+  let changeHealth = changeState("health", (x) => healthLevel);
   character(changeHealth);
 }
 
 
-function levelUp(character)
-{
-  let funcArray = addOnePointFunctionToArray(["level","weapon","defense"]);
-  runFuncArray(funcArray,character);
+function levelUp(character) {
+  let funcArray = addOnePointFunctionToArray(["level", "weapon", "defense"]);
+  runFuncArray(funcArray, character);
   healthLevelUp(character);
 }
 
-function sellItem(character,item) {
-  let obj = character();
+function sellItem(character, item) {
+  let obj = clonedeep(character());
   obj.gold += obj.store[item].cost;
   let index = obj.items.indexOf(item);
   obj.items.splice(index, 1);
   obj.store.items.push(item);
-  character(replaceState({...obj}));
+  character(replaceState(clonedeep(obj)));
 }
 
 function unequip(character, item) {
-  let obj = character();
+  let obj = clonedeep(character());
   if (obj.equipped.includes(item)) {
     obj.items.push(item);
     var index = obj.equipped.indexOf(item);
@@ -103,11 +105,11 @@ function unequip(character, item) {
     let keys = Object.keys(obj.store[item]);
     obj[keys[1]] = obj[keys[1]] - obj.store[item][keys[1]];
   }
-  character(replaceState({...obj}))
+  character(replaceState(clonedeep(obj)));
 }
 
-function equipItem(character,item) {
-  let obj = character();
+function equipItem(character, item) {
+  let obj = clonedeep(character());
   if (obj.weaponItems.includes(item) && obj.equipped.some(item => obj.weaponItems.includes(item))) {
     return;
   }
@@ -124,7 +126,7 @@ function equipItem(character,item) {
     let keys = Object.keys(obj.store[item]);
     obj[keys[1]] = obj[keys[1]] + obj.store[item][keys[1]];
   }
-  character(replaceState({...obj}))
+  character(replaceState(clonedeep(obj)))
 }
 
 

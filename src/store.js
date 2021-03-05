@@ -1,4 +1,4 @@
-import {storeState,replaceState} from "./character.js"
+import {storeState,replaceState,clonedeep,} from "./character.js"
 
 const obj = { "items": ["sword", "shield", "mace", "heart", "steelshield", "boxinggloves"], "sword": { cost: 5, weapon: 2 }, "boxinggloves": { cost: 3, weapon: 1 }, "mace": { cost: 10, weapon: 3 }, "shield": { cost: 5, defense: 2 }, "steelshield": { cost: 10, defense: 3 }, "heart": { cost: 5, health: 1 }};
 
@@ -6,8 +6,8 @@ const store = storeState(obj);
 
 
 function buyItem(store, character, item) {
-  let storeObj = store();
-  let characterObj = character();
+  let storeObj = clonedeep(store());
+  let characterObj = clonedeep(character());
   if (storeObj.items.includes(item) && ((characterObj.items.length + characterObj.equipped.length) < 4)) {
     if (characterObj.gold >= storeObj[item].cost) {
       characterObj.gold = characterObj.gold - storeObj[item].cost;
@@ -22,8 +22,8 @@ function buyItem(store, character, item) {
       }
     }
   }
-  store(replaceState({...storeObj}));
-  character(replaceState({...characterObj}));
+  store(replaceState(clonedeep(storeObj)));
+  character(replaceState(clonedeep(characterObj)));
 }
 
 export class Store{
