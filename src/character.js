@@ -1,8 +1,8 @@
 import {Store} from "./store";
 
 import store from "./store";
-import functional from "./functional.js"
-const clonedeep = require('lodash.clonedeep');
+import functional from "./functional.js";
+const clonedeep = require('lodash/clonedeep');
 
 
 let characterObj = {"store":store, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };

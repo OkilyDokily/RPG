@@ -1,4 +1,4 @@
-import functional from "./functional.js"
+import functional from "./functional.js";
 
 
 

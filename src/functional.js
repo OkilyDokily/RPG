@@ -1,4 +1,4 @@
-const clonedeep = require('lodash.clonedeep');
+const clonedeep = require('lodash/clonedeep');
 
 
 const functional = storeState();
@@ -38,3 +38,5 @@ export function replaceState(state) {
     return clonedeep(state);
   };
 };
+
+export default functional;

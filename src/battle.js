@@ -2,7 +2,7 @@
 import character from "./character.js";
 import enemy from "./enemy.js";
 import functional from "./functional.js";
-export const clonedeep = require('lodash.clonedeep');
+export const clonedeep = require('lodash/clonedeep');
 
 let { addFunction, storeState, replaceState } = functional();
 const battle = storeState();
