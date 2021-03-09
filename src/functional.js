@@ -3,23 +3,25 @@ const clonedeep = require('lodash/clonedeep');
 
 const functional = storeState();
 
-functional(addFunction(addFunction));
-functional(addFunction(storeState));
-functional(addFunction(changeState));
-functional(addFunction(replaceState));
+
+functional(addFunction(addFunction,"addFunction"));
+functional(addFunction(storeState,"storeState"));
+functional(addFunction(changeState,"changeState"));
+functional(addFunction(replaceState,"replaceState"));
 
 
-function addFunction(func) {
+function addFunction(func,name) {
   return function (state) {
     let obj = clonedeep(state);
-    obj[func.name] = func;
+    obj[name] = func;
     return clonedeep(obj);
   };
 }
 function storeState(obj = {}) {
   let state = clonedeep(obj);
-  return function (modifyState) {
+  return function (modifyState = null) {
     let newState = clonedeep(state);
+    if (modifyState == null) return newState;
     state = modifyState(newState);
     return newState;
   };
@@ -30,13 +32,13 @@ function changeState(prop, func) {
     let obj = clonedeep(state);
     state[prop] = func(state[prop] || 0);
     return clonedeep(obj);
-  }
+  };
 }
 
 export function replaceState(state) {
   return function () {
     return clonedeep(state);
   };
-};
+}
 
 export default functional;

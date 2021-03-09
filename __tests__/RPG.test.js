@@ -1,62 +1,87 @@
-import {Character} from '../src/character.js'
-import {Enemy} from '../src/enemy.js'
-import {Battle} from '../src/battle.js'
-import {Store} from '../src/store.js'
+import store from '../src/store.js';
+import functional from '../src/functional.js';
+import character from '../src/character.js';
+import enemy from '../src/enemy.js';
+import battle from '../src/battle.js';
 
 
+import { Character } from '../src/character.js';
+import { Enemy } from '../src/enemy.js';
+import { Battle } from '../src/battle.js';
+import { Store } from '../src/store.js';
+
+
+
+let { addFunction, storeState, replaceState, changeState } = functional();
 
 describe('Store', () => {
   test('should correctly create a store object', () => {
     const store = new Store();
-    expect(store.sword).toEqual({cost:5, weapon:2});
-    expect(store.shield).toEqual({cost: 5, defense:2});
-    expect(store.heart).toEqual({cost: 5, health: 1});
-    expect(store.items).toEqual(["sword","shield","mace","heart","steelshield", "boxinggloves"]); 
+    expect(store.sword).toEqual({ cost: 5, weapon: 2 });
+    expect(store.shield).toEqual({ cost: 5, defense: 2 });
+    expect(store.heart).toEqual({ cost: 5, health: 1 });
+    expect(store.items).toEqual(["sword", "shield", "mace", "heart", "steelshield", "boxinggloves"]);
+  });
+
+  test('functional/should correctly create a store object', () => {
+    const storeobj = store();
+    expect(storeobj.sword).toEqual({ cost: 5, weapon: 2 });
+    expect(storeobj.shield).toEqual({ cost: 5, defense: 2 });
+    expect(storeobj.heart).toEqual({ cost: 5, health: 1 });
+    expect(storeobj.items).toEqual(["sword", "shield", "mace", "heart", "steelshield", "boxinggloves"]);
   });
 
   test('store should let character buy item', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 5;
-    store.buyItem(character,"sword");
+    store.buyItem(character, "sword");
     const characterHasItem = character.items.includes("sword")
     expect(characterHasItem).toEqual(true);
   });
+
+  test('functional/store should let character buy item', () => {
+    store(changeState("gold",x => x + 5));
+    store().buyItem("sword");
+    const characterHasItem = character().items.includes("sword");
+    expect(characterHasItem).toEqual(true);
+  });
+
 
   test('can not buy item that is already owned', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 10;
 
-    store.buyItem(character,"sword");
-    store.buyItem(character,"sword");
+    store.buyItem(character, "sword");
+    store.buyItem(character, "sword");
     let length = character.items.filter(item => item == "sword").length
     expect(store.items.length).toEqual(5);
     expect(length).toEqual(1);
-  });  
+  });
 
   test('can not buy more than 4 items', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 50;
 
-    store.buyItem(character,"sword");
-    store.buyItem(character,"shield");
-    store.buyItem(character,"mace");
-    store.buyItem(character,"steelshield");
-    store.buyItem(character,"boxinggloves");
-    
+    store.buyItem(character, "sword");
+    store.buyItem(character, "shield");
+    store.buyItem(character, "mace");
+    store.buyItem(character, "steelshield");
+    store.buyItem(character, "boxinggloves");
+
     expect(character.items.length).toEqual(4);
-   
-  });  
+
+  });
 
   test('automatically apply hearts rather than equip them', () => {
     const store = new Store();
     const character = new Character();
     character.gold = 5;
-    store.buyItem(character,"heart");
+    store.buyItem(character, "heart");
     expect(character.health).toEqual(21);
-  });  
+  });
 });
 
 describe('Character', () => {
@@ -71,7 +96,7 @@ describe('Character', () => {
 
   test('automatically level up when experience points reach or exceed a multiple of 100', () => {
     const character = new Character();
-    for(let i = 1; i <= 200;i++){
+    for (let i = 1; i <= 200; i++) {
       character.addExperiencePoints()
     }
     expect(character.level).toEqual(3);
@@ -139,10 +164,10 @@ describe('Character', () => {
 describe('Enemy', () => {
   test('should correctly create an Enemy object', () => {
     const enemy = new Enemy();
-   
+
     expect(enemy.health).toEqual(5);
     expect(enemy.gold).toEqual(5);
-    expect(enemy.weapon).toEqual(3);  
+    expect(enemy.weapon).toEqual(3);
   });
 });
 
@@ -198,21 +223,21 @@ describe('Battle', () => {
     const enemy = new Enemy();
     const character = new Character();
     let winner = battle.whoWinsAttack(character, enemy);
-    battle.attack(winner,character,enemy)
-    if(winner === "character"){
+    battle.attack(winner, character, enemy)
+    if (winner === "character") {
       expect(enemy.health).toEqual(2);
     }
-    else{
+    else {
       expect(character.health).toEqual(17);
-    }  
+    }
   });
 
   test('determine if enemy has died', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("character",character,enemy);
-    battle.attack("character",character,enemy);
+    battle.attack("character", character, enemy);
+    battle.attack("character", character, enemy);
     const enemyDied = battle.hasEnemyDied(enemy);
     expect(enemyDied).toEqual(true);
   });
@@ -221,13 +246,13 @@ describe('Battle', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
     const characterDied = battle.hasCharacterDied(character);
     expect(characterDied).toEqual(true);
   });
@@ -236,9 +261,9 @@ describe('Battle', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("character",character,enemy);
-    battle.attack("character",character,enemy);
-    battle.extractGoldFromEnemyIfEnemyIsDead(character,enemy);
+    battle.attack("character", character, enemy);
+    battle.attack("character", character, enemy);
+    battle.extractGoldFromEnemyIfEnemyIsDead(character, enemy);
     expect(character.gold).toEqual(5);
   });
 
@@ -246,9 +271,9 @@ describe('Battle', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("character",character,enemy);
-    battle.attack("character",character,enemy);
-    const battleEnded = battle.determineIfBattleHasEnded(character,enemy);
+    battle.attack("character", character, enemy);
+    battle.attack("character", character, enemy);
+    const battleEnded = battle.determineIfBattleHasEnded(character, enemy);
     expect(battleEnded).toEqual(true);
   });
 
@@ -256,14 +281,14 @@ describe('Battle', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    const battleEnded = battle.determineIfBattleHasEnded(character,enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    const battleEnded = battle.determineIfBattleHasEnded(character, enemy);
     expect(battleEnded).toEqual(true);
   });
 
@@ -279,18 +304,17 @@ describe('Battle', () => {
     const battle = new Battle();
     const enemy = new Enemy();
     const character = new Character();
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("enemy",character,enemy);
-    battle.attack("character",character,enemy);
-    battle.attack("character",character,enemy);
-    battle.attack("character",character,enemy);
-    
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("enemy", character, enemy);
+    battle.attack("character", character, enemy);
+    battle.attack("character", character, enemy);
+    battle.attack("character", character, enemy);
+
     expect(character.XP).toEqual(7);
   });
 
- 
 
 });
 

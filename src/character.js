@@ -1,25 +1,23 @@
-import {Store} from "./store";
-
 import store from "./store";
 import functional from "./functional.js";
 const clonedeep = require('lodash/clonedeep');
 
 
-let characterObj = {"store":store, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
+let characterObj = { "store": store, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
 
-let {addFunction, storeState, changeState, replaceState} = functional();
+let { addFunction, storeState, changeState, replaceState } = functional();
 let character = storeState(characterObj);
+
 addCharacterFunctions(character);
 
 function addCharacterFunctions(character) {
-  character(addFunction(addExperiencePoints.bind(null, character)));
-  character(addFunction(healthLevelUp.bind(null, character)));
-  character(addFunction(levelUp.bind(null, character)));
-  character(addFunction(sellItem.bind(null, character)));
-  character(addFunction(unequip.bind(null, character)));
-  character(addFunction(equipItem.bind(null, character)));
+  character(addFunction(addExperiencePoints.bind(null, character), "addExperiencePoints"));
+  character(addFunction(healthLevelUp.bind(null, character), "healthLevelUp"));
+  character(addFunction(levelUp.bind(null, character), "levelUp"));
+  character(addFunction(sellItem.bind(null, character), "sellItem"));
+  character(addFunction(unequip.bind(null, character), "unequip"));
+  character(addFunction(equipItem.bind(null, character), "equipItem"));
 }
-
 
 const addOnePoint = (x) => x + 1;
 
@@ -60,10 +58,10 @@ function levelUp(character) {
 
 function sellItem(character, item) {
   let obj = clonedeep(character());
-  obj.gold += obj.store[item].cost;
+  obj.gold += obj.store()[item].cost;
   let index = obj.items.indexOf(item);
   obj.items.splice(index, 1);
-  obj.store.items.push(item);
+  obj.store().items.push(item);
   character(replaceState(clonedeep(obj)));
 }
 
@@ -74,8 +72,8 @@ function unequip(character, item) {
     var index = obj.equipped.indexOf(item);
     obj.equipped.splice(index, 1);
 
-    let keys = Object.keys(obj.store[item]);
-    obj[keys[1]] = obj[keys[1]] - obj.store[item][keys[1]];
+    let keys = Object.keys(obj.store()[item]);
+    obj[keys[1]] = obj[keys[1]] - obj.store()[item][keys[1]];
   }
   character(replaceState(clonedeep(obj)));
 }
@@ -95,12 +93,14 @@ function equipItem(character, item) {
     var index = obj.items.indexOf(item);
     obj.items.splice(index, 1);
 
-    let keys = Object.keys(obj.store[item]);
-    obj[keys[1]] = obj[keys[1]] + obj.store[item][keys[1]];
+    let keys = Object.keys(obj.store()[item]);
+    obj[keys[1]] = obj[keys[1]] + obj.store()[item][keys[1]];
   }
   character(replaceState(clonedeep(obj)))
 }
 
+
+import { Store } from "./store";
 
 export class Character {
   constructor() {
@@ -170,4 +170,6 @@ export class Character {
     this.store.items.push(item);
   }
 }
+
+
 export default character;

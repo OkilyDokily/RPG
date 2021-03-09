@@ -1,16 +1,20 @@
 import functional from "./functional.js";
 import character from "./character.js";
+
 const clonedeep = require('lodash/clonedeep');
 
 const obj = { "items": ["sword", "shield", "mace", "heart", "steelshield", "boxinggloves"], "sword": { cost: 5, weapon: 2 }, "boxinggloves": { cost: 3, weapon: 1 }, "mace": { cost: 10, weapon: 3 }, "shield": { cost: 5, defense: 2 }, "steelshield": { cost: 10, defense: 3 }, "heart": { cost: 5, health: 1 } };
 
 let { addFunction, storeState, replaceState } = functional();
 
-const store = storeState(obj);
+
+let store = storeState(obj);
+
+
 addFunctionsToStore(store, character);
 
 function addFunctionsToStore(store, character) {
-  store(addFunction(buyItem.bind(null, store, character)));
+  store(addFunction(buyItem.bind(null, store, character),"buyItem"));
 }
 
 

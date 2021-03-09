@@ -9,17 +9,17 @@ const battle = storeState();
 addBattleFunction(character,enemy);
 
 function addBattleFunction(character, enemy) {
-  battle(addFunction(rollDie));
-  battle(addFunction(extractGoldFromEnemy.bind(null, character, enemy)));
-  battle(addFunction(subtractEnemyHealth.bind(null, character, enemy)));
-  battle(addFunction(subtractCharacterHealth.bind(null, character, enemy)));
-  battle(addFunction(attack.bind(null,character)));
-  battle(addFunction(whoWinsAttack));
-  battle(addFunction(hasCharacterDied.bind(null,character)));
-  battle(addFunction(hasEnemyDied.bind(null, enemy)));
-  battle(addFunction(extractGoldFromEnemyIfEnemyIsDead));
-  battle(addFunction(determineIfBattleHasEnded));
-  battle(addFunction(startBattle));
+  battle(addFunction(rollDie),"rollDie");
+  battle(addFunction(extractGoldFromEnemy.bind(null, character, enemy),"extractGoldFromEnemy"));
+  battle(addFunction(subtractEnemyHealth.bind(null, character, enemy),"subtractEnemyHealth"));
+  battle(addFunction(subtractCharacterHealth.bind(null, character, enemy),"subtractCharacterHealth"));
+  battle(addFunction(attack.bind(null,character),"attack"));
+  battle(addFunction(whoWinsAttack),"whoWinsAttack");
+  battle(addFunction(hasCharacterDied.bind(null,character),"hasCharacterDied"));
+  battle(addFunction(hasEnemyDied.bind(null, enemy),"hasEnemyDied"));
+  battle(addFunction(extractGoldFromEnemyIfEnemyIsDead),"extractGoldFromEnemyIfEnemyIsDead");
+  battle(addFunction(determineIfBattleHasEnded),"determineIfBattleHasEnded");
+  battle(addFunction(startBattle),"startBattle");
 }
 
 
