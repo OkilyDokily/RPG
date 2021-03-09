@@ -30,7 +30,7 @@ function storeState(obj = {}) {
 function changeState(prop, func) {
   return function (state) {
     let obj = clonedeep(state);
-    state[prop] = func(state[prop] || 0);
+    obj[prop] = func(obj[prop] || 0);
     return clonedeep(obj);
   };
 }

@@ -1,5 +1,4 @@
 import functional from "./functional.js";
-import character from "./character.js";
 
 const clonedeep = require('lodash/clonedeep');
 
@@ -8,13 +7,15 @@ const obj = { "items": ["sword", "shield", "mace", "heart", "steelshield", "boxi
 let { addFunction, storeState, replaceState } = functional();
 
 
-let store = storeState(obj);
-
-
-addFunctionsToStore(store, character);
 
 function addFunctionsToStore(store, character) {
   store(addFunction(buyItem.bind(null, store, character),"buyItem"));
+}
+
+export function makeStore(character){
+  let store = storeState(obj);
+  addFunctionsToStore(store, character);
+  return store;
 }
 
 
@@ -68,4 +69,3 @@ export class Store {
   }
 }
 
-export default store;

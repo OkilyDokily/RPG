@@ -1,14 +1,17 @@
 
-import character from "./character.js";
-import enemy from "./enemy.js";
 import functional from "./functional.js";
 export const clonedeep = require('lodash/clonedeep');
 
 let { addFunction, storeState, replaceState } = functional();
-const battle = storeState();
-addBattleFunction(character,enemy);
 
-function addBattleFunction(character, enemy) {
+function makeBattle(character,enemy){
+  const battle = storeState();
+  addBattleFunction(battle,character, enemy);
+  return battle;
+}
+
+
+function addBattleFunction(battle,character, enemy) {
   battle(addFunction(rollDie),"rollDie");
   battle(addFunction(extractGoldFromEnemy.bind(null, character, enemy),"extractGoldFromEnemy"));
   battle(addFunction(subtractEnemyHealth.bind(null, character, enemy),"subtractEnemyHealth"));

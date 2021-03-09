@@ -1,8 +1,7 @@
-import store from '../src/store.js';
 import functional from '../src/functional.js';
-import character from '../src/character.js';
-import enemy from '../src/enemy.js';
-import battle from '../src/battle.js';
+import {makeCharacter} from '../src/character.js';
+import {makeEnemy} from '../src/enemy.js';
+import {makeBattle} from '../src/battle.js';
 
 
 import { Character } from '../src/character.js';
@@ -24,7 +23,10 @@ describe('Store', () => {
   });
 
   test('functional/should correctly create a store object', () => {
-    const storeobj = store();
+    const character = makeCharacter();
+    const characterObj = character();
+  
+    const storeobj = characterObj.store();
     expect(storeobj.sword).toEqual({ cost: 5, weapon: 2 });
     expect(storeobj.shield).toEqual({ cost: 5, defense: 2 });
     expect(storeobj.heart).toEqual({ cost: 5, health: 1 });
@@ -41,8 +43,10 @@ describe('Store', () => {
   });
 
   test('functional/store should let character buy item', () => {
-    store(changeState("gold",x => x + 5));
-    store().buyItem("sword");
+    const character = makeCharacter();
+    character(changeState("gold",x => x + 5));
+    character().store().buyItem("sword");
+    
     const characterHasItem = character().items.includes("sword");
     expect(characterHasItem).toEqual(true);
   });
@@ -55,8 +59,19 @@ describe('Store', () => {
 
     store.buyItem(character, "sword");
     store.buyItem(character, "sword");
-    let length = character.items.filter(item => item == "sword").length
+    let length = character.items.filter(item => item == "sword").length;
     expect(store.items.length).toEqual(5);
+    expect(length).toEqual(1);
+  });
+
+  test('functional/can not buy item that is already owned', () => {
+    const character = makeCharacter();
+    character(changeState("gold", x => x + 10));
+   
+    character().store().buyItem("sword");
+    character().store().buyItem("sword");
+    let length = character().items.filter(item => item == "sword").length;
+    expect(character().store().items.length).toEqual(5);
     expect(length).toEqual(1);
   });
 
@@ -72,7 +87,20 @@ describe('Store', () => {
     store.buyItem(character, "boxinggloves");
 
     expect(character.items.length).toEqual(4);
+  });
 
+
+  test('functional/can not buy more than 4 items', () => {
+    const character = makeCharacter();
+    character(changeState("gold", x => x + 50));
+    const store = character().store();
+    store.buyItem("sword");
+    store.buyItem("shield");
+    store.buyItem("mace");
+    store.buyItem("steelshield");
+    store.buyItem("boxinggloves");
+
+    expect(character().items.length).toEqual(4);
   });
 
   test('automatically apply hearts rather than equip them', () => {
@@ -81,6 +109,14 @@ describe('Store', () => {
     character.gold = 5;
     store.buyItem(character, "heart");
     expect(character.health).toEqual(21);
+  });
+
+  test('functional/automatically apply hearts rather than equip them', () => {
+    const character = makeCharacter();
+    character(changeState("gold", x => x + 5));
+    const store = character().store();
+    store.buyItem("heart");
+    expect(character().health).toEqual(21);
   });
 });
 
@@ -94,16 +130,39 @@ describe('Character', () => {
     expect(character.weapon).toEqual(3);
   });
 
+  test('functional/should correctly create a character object', () => {
+    const characterFunc = makeCharacter();
+    const character = characterFunc();
+    expect(character.health).toEqual(20);
+    expect(character.gold).toEqual(0);
+    expect(character.level).toEqual(1);
+    expect(character.XP).toEqual(0);
+    expect(character.weapon).toEqual(3);
+  });
+
   test('automatically level up when experience points reach or exceed a multiple of 100', () => {
     const character = new Character();
     for (let i = 1; i <= 200; i++) {
-      character.addExperiencePoints()
+      character.addExperiencePoints();
     }
     expect(character.level).toEqual(3);
     expect(character.weapon).toEqual(5);
     expect(character.health).toEqual(30);
-    expect(character.defense).toEqual(2)
+    expect(character.defense).toEqual(2);
   });
+
+  test('functional/automatically level up when experience points reach or exceed a multiple of 100', () => {
+    const characterFunc = makeCharacter();
+    const character = characterFunc();
+    for (let i = 1; i <= 200; i++) {
+      character.addExperiencePoints();
+    }
+    expect(character.level).toEqual(3);
+    expect(character.weapon).toEqual(5);
+    expect(character.health).toEqual(30);
+    expect(character.defense).toEqual(2);
+  });
+
 
   test('let character equip attack item', () => {
     const character = new Character();

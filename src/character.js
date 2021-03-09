@@ -1,14 +1,12 @@
-import store from "./store";
+import {makeStore} from "./store";
 import functional from "./functional.js";
 const clonedeep = require('lodash/clonedeep');
 
 
-let characterObj = { "store": store, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
+let characterObj = { "store": null, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
 
 let { addFunction, storeState, changeState, replaceState } = functional();
-let character = storeState(characterObj);
 
-addCharacterFunctions(character);
 
 function addCharacterFunctions(character) {
   character(addFunction(addExperiencePoints.bind(null, character), "addExperiencePoints"));
@@ -19,12 +17,22 @@ function addCharacterFunctions(character) {
   character(addFunction(equipItem.bind(null, character), "equipItem"));
 }
 
+export function makeCharacter()
+{
+  let character = storeState(characterObj);
+  let store = makeStore(character);
+  character(changeState("store",() => store));
+  addCharacterFunctions(character);
+
+  return character;
+}
+
 const addOnePoint = (x) => x + 1;
 
 const addExperiencePointsFunc = changeState("XP", addOnePoint);
 
 
-export function addExperiencePoints(character) {
+function addExperiencePoints(character) {
   let result = character(addExperiencePointsFunc);
   if (result.XP >= (result.level * 100)) {
     this.levelUp();
@@ -53,6 +61,7 @@ function healthLevelUp(character) {
 function levelUp(character) {
   let funcArray = addOnePointFunctionToArray(["level", "weapon", "defense"]);
   runFuncArray(funcArray, character);
+
   this.healthLevelUp();
 }
 
@@ -172,4 +181,3 @@ export class Character {
 }
 
 
-export default character;
