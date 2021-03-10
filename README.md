@@ -1,7 +1,7 @@
 
 # _RPG_
 
-#### _This demonstrates knowledge of JavaScript and Jest._
+#### _This demonstrates knowledge of JavaScript, Functional programming and Jest._
 
 #### By _**Matthew**_
 
@@ -9,7 +9,7 @@
 ## Description
 
 _A page demonstrates basic ES6 and Jest knowledge_
-_Page determines if soduku values are valid_
+_Refactors an OO RPG to a functional RPG_
 
 ## Spec
  | Spec                                                              | Input                                             | Output                                                                   |
