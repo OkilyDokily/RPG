@@ -23,7 +23,7 @@ function storeState(obj = {}) {
     let newState = clonedeep(state);
     if (modifyState == null) return newState;
     state = modifyState(newState);
-    return newState;
+    return clonedeep(state);
   };
 }
 

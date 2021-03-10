@@ -3,7 +3,7 @@ import functional from "./functional.js";
 const clonedeep = require('lodash/clonedeep');
 
 
-let characterObj = { "store": null, "weaponIems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
+let characterObj = { "store": null, "weaponItems": ["sword", "mace"], "shieldItems": ["shield", "steel shield"], "health": 20, "gold": 0, "XP": 0, "level": 1, "weapon": 3, "defense": 0, "items": [], "equipped": [] };
 
 let { addFunction, storeState, changeState, replaceState } = functional();
 
@@ -35,7 +35,7 @@ const addExperiencePointsFunc = changeState("XP", addOnePoint);
 function addExperiencePoints(character) {
   let result = character(addExperiencePointsFunc);
   if (result.XP >= (result.level * 100)) {
-    this.levelUp();
+    character().levelUp();
   }
 }
 
@@ -52,7 +52,7 @@ function runFuncArray(arr, character) {
 }
 
 function healthLevelUp(character) {
-  let healthLevel = 10 + ((character().level - 1) * 5);
+  let healthLevel = 20 + ((character().level - 1) * 5);
   let changeHealth = changeState("health", () => healthLevel);
   character(changeHealth);
 }
@@ -62,7 +62,7 @@ function levelUp(character) {
   let funcArray = addOnePointFunctionToArray(["level", "weapon", "defense"]);
   runFuncArray(funcArray, character);
 
-  this.healthLevelUp();
+  character().healthLevelUp();
 }
 
 function sellItem(character, item) {
@@ -89,6 +89,7 @@ function unequip(character, item) {
 
 function equipItem(character, item) {
   let obj = clonedeep(character());
+ 
   if (obj.weaponItems.includes(item) && obj.equipped.some(item => obj.weaponItems.includes(item))) {
     return;
   }
@@ -96,7 +97,7 @@ function equipItem(character, item) {
   if (obj.shieldItems.includes(item) && obj.equipped.some(item => obj.shieldItems.includes(item))) {
     return;
   }
-
+ 
   if (obj.items.includes(item)) {
     obj.equipped.push(item);
     var index = obj.items.indexOf(item);

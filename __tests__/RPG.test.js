@@ -152,15 +152,15 @@ describe('Character', () => {
   });
 
   test('functional/automatically level up when experience points reach or exceed a multiple of 100', () => {
-    const characterFunc = makeCharacter();
-    const character = characterFunc();
+    const character = makeCharacter();
+
     for (let i = 1; i <= 200; i++) {
-      character.addExperiencePoints();
+      character().addExperiencePoints();
     }
-    expect(character.level).toEqual(3);
-    expect(character.weapon).toEqual(5);
-    expect(character.health).toEqual(30);
-    expect(character.defense).toEqual(2);
+    expect(character().level).toEqual(3);
+    expect(character().weapon).toEqual(5);
+    expect(character().health).toEqual(30);
+    expect(character().defense).toEqual(2);
   });
 
 
@@ -169,6 +169,16 @@ describe('Character', () => {
     character.items.push("sword");
     character.equipItem("sword");
     expect(character.weapon).toEqual(5)
+  });
+
+  test('functional/let character equip attack item', () => {
+    const character = makeCharacter();
+    console.log(character().items)
+    let arr = character().items.push("sword");
+    
+    character(changeState("items",() => arr));
+    character().equipItem("sword");
+    expect(character().weapon).toEqual(5)
   });
 
   test('let character equip defense item', () => {

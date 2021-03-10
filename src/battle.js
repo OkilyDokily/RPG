@@ -25,8 +25,6 @@ function addBattleFunction(battle,character, enemy) {
   battle(addFunction(startBattle),"startBattle");
 }
 
-
-
 function rollDie() {
   return ({ character: Math.floor(6 * Math.random()), enemy: Math.floor(6 * Math.random()) });
 }
