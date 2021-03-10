@@ -4,7 +4,7 @@ export const clonedeep = require('lodash/clonedeep');
 
 let { addFunction, storeState, replaceState } = functional();
 
-function makeBattle(character,enemy){
+export function makeBattle(character,enemy){
   const battle = storeState();
   addBattleFunction(battle,character, enemy);
   return battle;
@@ -12,17 +12,17 @@ function makeBattle(character,enemy){
 
 
 function addBattleFunction(battle,character, enemy) {
-  battle(addFunction(rollDie),"rollDie");
+  battle(addFunction(rollDie,"rollDie"));
   battle(addFunction(extractGoldFromEnemy.bind(null, character, enemy),"extractGoldFromEnemy"));
   battle(addFunction(subtractEnemyHealth.bind(null, character, enemy),"subtractEnemyHealth"));
   battle(addFunction(subtractCharacterHealth.bind(null, character, enemy),"subtractCharacterHealth"));
-  battle(addFunction(attack.bind(null,character),"attack"));
-  battle(addFunction(whoWinsAttack),"whoWinsAttack");
+  battle(addFunction(attack.bind(null,battle,character),"attack"));
+  battle(addFunction(whoWinsAttack,"whoWinsAttack"));
   battle(addFunction(hasCharacterDied.bind(null,character),"hasCharacterDied"));
   battle(addFunction(hasEnemyDied.bind(null, enemy),"hasEnemyDied"));
-  battle(addFunction(extractGoldFromEnemyIfEnemyIsDead),"extractGoldFromEnemyIfEnemyIsDead");
-  battle(addFunction(determineIfBattleHasEnded),"determineIfBattleHasEnded");
-  battle(addFunction(startBattle),"startBattle");
+  battle(addFunction(extractGoldFromEnemyIfEnemyIsDead,"extractGoldFromEnemyIfEnemyIsDead"));
+  battle(addFunction(determineIfBattleHasEnded,"determineIfBattleHasEnded"));
+  battle(addFunction(startBattle,"startBattle"));
 }
 
 function rollDie() {
@@ -48,14 +48,14 @@ function subtractCharacterHealth(character, enemy) {
   character(replaceState(clonedeep(characterObj)));
 }
 
-function attack(character, winner) {
+function attack(battle,character, winner) {
   if (winner === "character") {
-    this.subtractEnemyHealth();
+    battle().subtractEnemyHealth();
   }
   else {
-    this.subtractCharacterHealth();
+    battle().subtractCharacterHealth();
   }
-  character.addExperiencePoints();
+  character().addExperiencePoints();
 }
 
 function whoWinsAttack() {
@@ -69,7 +69,7 @@ function whoWinsAttack() {
 }
 
 function hasCharacterDied(character) {
-  if (character.health <= 0) {
+  if (character().health <= 0) {
     return true;
   }
   return false;

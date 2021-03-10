@@ -3,7 +3,14 @@ import functional from "./functional.js";
 
 
 const storeState = functional().storeState;
-const enemy = storeState({ "gold": 5, "weapon": 3, "health": 5 });
+
+
+export function makeEnemy()
+{
+  const enemy = storeState({ "gold": 5, "weapon": 3, "health": 5 });
+  return enemy;
+}
+
 
 export class Enemy{
   constructor(){
@@ -13,4 +20,3 @@ export class Enemy{
   }
 }
 
-export default enemy;
